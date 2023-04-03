@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2023. Már 21. 13:57
+-- Létrehozás ideje: 2023. Ápr 03. 08:04
 -- Kiszolgáló verziója: 10.4.27-MariaDB
 -- PHP verzió: 8.0.25
 
@@ -41,6 +41,28 @@ CREATE TABLE `admin` (
 INSERT INTO `admin` (`id`, `teljesnév`, `felhasználónév`, `jelszó`) VALUES
 (33, 'admin', 'admin', '21232f297a57a5a743894a0e4a801fc3'),
 (34, 'asd', 'asd', '7815696ecbf1c96e6894b779456d330e');
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `kapcsolat`
+--
+
+CREATE TABLE `kapcsolat` (
+  `id` int(11) NOT NULL,
+  `kapcs_név` varchar(100) NOT NULL,
+  `kapcs_elérhetőség` varchar(255) NOT NULL,
+  `kapcs_email` varchar(255) NOT NULL,
+  `üzenet` varchar(2558) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `kapcsolat`
+--
+
+INSERT INTO `kapcsolat` (`id`, `kapcs_név`, `kapcs_elérhetőség`, `kapcs_email`, `üzenet`) VALUES
+(1, 'asd', '+36201234567', 'pelda@gmail.com', 'asdasfhaijasocka aosjf iasnf'),
+(2, 'proba', '+36201234567', 'pelda@gmail.com', 'ez egy üzenet\r\n');
 
 -- --------------------------------------------------------
 
@@ -92,7 +114,9 @@ CREATE TABLE `rendelés` (
 INSERT INTO `rendelés` (`id`, `étel`, `ár`, `db`, `total`, `rend_dátum`, `status`, `rend_név`, `rend_elérhetőség`, `rend_email`, `rend_cím`) VALUES
 (1, 'Sajtburger', 950, 13013, 12362350, '2023-03-13', 'szállítva', 'asdasdasdasd', '+36201234567', 'peldaasdasdasdaaasd@gmail.com', ''),
 (2, 'Songoku Pizza', 1700, 860, 1462000, '2023-03-20', 'megrendelve', 'Audrey Banks', '+1 (646) 779-7325', 'sadi@mailinator.com', 'Qui qui itaque totam'),
-(3, 'Songoku Pizza', 1700, 667, 1133900, '2023-03-21', 'megrendelve', 'Lavinia Nixon', '+1 (848) 277-4389', 'gejic@mailinator.com', 'Voluptatibus magnam ');
+(3, 'Songoku Pizza', 1700, 667, 1133900, '2023-03-21', 'megrendelve', 'Lavinia Nixon', '+1 (848) 277-4389', 'gejic@mailinator.com', 'Voluptatibus magnam '),
+(4, 'Sajtburger', 950, 1, 950, '2023-03-27', 'megrendelve', 'k', '+36201234567', 'pelda@gmail.com', 'kaosmdasd'),
+(5, 'Sajtburger', 950, 100, 95000, '2023-04-03', 'megrendelve', 'Teljes Név', '+36201234567', 'pelda@gmail.com', 'Sajat cim utca 2\r\n');
 
 -- --------------------------------------------------------
 
@@ -131,6 +155,12 @@ ALTER TABLE `admin`
   ADD PRIMARY KEY (`id`);
 
 --
+-- A tábla indexei `kapcsolat`
+--
+ALTER TABLE `kapcsolat`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- A tábla indexei `kategória`
 --
 ALTER TABLE `kategória`
@@ -146,7 +176,8 @@ ALTER TABLE `rendelés`
 -- A tábla indexei `étel`
 --
 ALTER TABLE `étel`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `kategória_id` (`kategória_id`);
 
 --
 -- A kiírt táblák AUTO_INCREMENT értéke
@@ -159,6 +190,12 @@ ALTER TABLE `admin`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
+-- AUTO_INCREMENT a táblához `kapcsolat`
+--
+ALTER TABLE `kapcsolat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT a táblához `kategória`
 --
 ALTER TABLE `kategória`
@@ -168,13 +205,23 @@ ALTER TABLE `kategória`
 -- AUTO_INCREMENT a táblához `rendelés`
 --
 ALTER TABLE `rendelés`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT a táblához `étel`
 --
 ALTER TABLE `étel`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Megkötések a kiírt táblákhoz
+--
+
+--
+-- Megkötések a táblához `étel`
+--
+ALTER TABLE `étel`
+  ADD CONSTRAINT `étel_ibfk_1` FOREIGN KEY (`kategória_id`) REFERENCES `kategória` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
